@@ -133,6 +133,7 @@ dataset/
 
 # Also all testing output images etc
 *.png
+*.jpg
 
 # JETBRAINS Idea stuff
 .idea
