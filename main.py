@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
-IMG_HEIGHT = 600
-IMG_WIDTH  = 400
+IMG_HEIGHT = 60
+IMG_WIDTH  = 40
 IMG_CHANNELS = 1 # Grayscale 1, RGB 3
 BATCH_SIZE = 16
 
@@ -47,7 +47,7 @@ def main():
     real_samples = generator.generate_real_samples(images, 16)
     print(real_samples[0].shape)
 
-    fake_samples = generator.generate_fake_samples(16, 600, 400)
+    fake_samples = generator.generate_fake_samples(16, IMG_HEIGHT, IMG_WIDTH)
     print(fake_samples[0].shape)
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
