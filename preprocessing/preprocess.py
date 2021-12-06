@@ -49,7 +49,7 @@ def load_and_preprocess(path, dims, mode=cv2.IMREAD_GRAYSCALE):
     images = load_images(path, mode)
     images = resize_to_dims(images, dims)
     images = [normalize_image(img) for img in images]
-    return np.array(images)
+    return np.expand_dims(np.array(images), axis=-1)
 
 def prepare_tensors(images, BATCH_SIZE = 16):
     num_samples = images.shape[0]
