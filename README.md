@@ -30,6 +30,16 @@ The first version of the dataset is available for [download](https://drive.googl
 ### Why Zandalari Trolls?
 In my **subjective** opinion, Zandalari Trolls and Humans have the best body posture. If you are familiar with the races, for example Trolls, or Orcs are usually stooped and look unnatural to me. Zandalari Trolls are also more muscular and greater in size then Humans. As they are the true alphas of the game, I decided to show my love for them this way.
 
+## Environment
+- Tensorflow 2.7.0 
+- tqdm 4.31.1
+- opencv-python 4.5.4
+- CUDA 11.5.1_496.13
+- cuDNN v8.2.2 (July 6th, 2021), for CUDA 11.4 (cuDNN for 11.5 does not work)
+- NVIDIA GeForce GTX 1060 & NVIDIA GeForce RTX 2080
+
+It is recommended to use GPU or any other accelerator for training the network. Generation can probably be done on CPU, though expect it won't be instantly. For a guide on how to install tensorflow for GPU, refer to [tensorflow-gpu installation guide](https://www.youtube.com/watch?v=hHWkvEcDBO0&ab_channel=AladdinPersson). The official documentation on how to install GPU support for tensorflow is not clear.
+
 ## Results
 The results obtained look very promising. TBD update with more epochs trained. The model learns to generate a posture similar to Zandalari Trolls. An interesting, yet not suprising, fact is, that the network has learned to generate also the WoWHead logo in the background, which was present in most of training images. (TBD add image illustrating this). As far as I know, there is no rigorous metric to evaluate the performance of GANs, so a human evaluator needs to assess the quality of generated images. I will update this section when I get results from ie 10.000 epochs.
 
