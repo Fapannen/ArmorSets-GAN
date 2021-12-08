@@ -6,6 +6,7 @@ In this repository, I tried to create a Generative Adversarial Network (GAN) for
 1) RGB images - parametrize definitions of partial models with third channel
 2) Finish README
 3) Clean the repo, unify img folders etc
+4) Resume training function
 
 ## Introduction
 In WoW, "transmog" is basically a "fashion style" that you apply to your character. Wearing different types of armour can (but don't have to) change your looks. There are specifically created "transmog sets" by the developers, which are usually intended to be well-matched together. Players, of course, experiment and often create nice and unique transmogs by combining several other transmog sets together. Note that a given item may or may not be a part of a transmog set. Since the process of creating a new, nice looking outfit needs a bit of creativity and can be considered an art to some extent, why not use GANs to generate this art? I will not be creating combinations of existing transmogs per se, rather the network shall learn new pieces of armor that could potentially be added to the game.
