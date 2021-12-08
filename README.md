@@ -31,7 +31,8 @@ The first version of the dataset is available for [download](https://drive.googl
 In my **subjective** opinion, Zandalari Trolls and Humans have the best body posture. If you are familiar with the races, for example Trolls, or Orcs are usually stooped and look unnatural to me. Zandalari Trolls are also more muscular and greater in size then Humans. As they are the true alphas of the game, I decided to show my love for them this way.
 
 ## Environment
-- Tensorflow 2.7.0 
+- Python 3.7.0
+- Tensorflow 2.7.0
 - tqdm 4.31.1
 - opencv-python 4.5.4
 - CUDA 11.5.1_496.13
