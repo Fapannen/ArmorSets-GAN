@@ -47,3 +47,4 @@ The results obtained look very promising. TBD update with more epochs trained. T
 - [WoWHead website](https://www.wowhead.com/)
 - [How to develop a generative adversarial network for an mnist handwritten digits from scratch in Keras](https://machinelearningmastery.com/how-to-develop-a-generative-adversarial-network-for-an-mnist-handwritten-digits-from-scratch-in-keras/)
 - [Image generation in 10 minutes with generative adversarial networks](https://towardsdatascience.com/image-generation-in-10-minutes-with-generative-adversarial-networks-c2afc56bfa3b)
+- [Tensorflow on GPU](https://www.tensorflow.org/guide/gpu)
