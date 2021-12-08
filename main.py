@@ -47,7 +47,7 @@ def main():
     real_samples = generator.generate_real_samples(images, BATCH_SIZE)
     print(real_samples[0].shape)
 
-    fake_samples = generator.generate_fake_samples(16, IMG_HEIGHT, IMG_WIDTH)
+    fake_samples = generator.generate_fake_samples(BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH)
     print(fake_samples[0].shape)
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
