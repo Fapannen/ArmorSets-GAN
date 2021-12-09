@@ -8,8 +8,13 @@ from tqdm import tqdm
 """
 Load images from 'path' directory, convert them to RGB and return a list of them 
 """
-def load_images(path, mode):
+def load_images(path, mode, only_zandalari=False):
     files = [f for f in listdir(path) if isfile(join(path + "/", f)) and f.endswith('png')]
+
+    # Keep only zandalaris, dataset contains also other races. Defaults to false
+    if only_zandalari:
+        files = [f for f in files if "_ZT" in f]
+
     ret = []
     for i in tqdm(range(len(files))):
         ret.append(cv2.imread(path + "/" + files[i], mode))
