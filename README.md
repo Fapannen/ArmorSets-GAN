@@ -40,16 +40,20 @@ In my **subjective** opinion, Zandalari Trolls and Humans have the best body pos
 It is recommended to use GPU or any other accelerator for training the network. Generation can probably be done on CPU, though expect it won't be instantly. For a guide on how to install tensorflow for GPU, refer to [tensorflow-gpu installation guide](https://www.youtube.com/watch?v=hHWkvEcDBO0&ab_channel=AladdinPersson). The official documentation on how to install GPU support for tensorflow is not clear.
 
 ## Results
-The results obtained look very promising. Results after training the model for 150 epochs on the extended dataset (RGB + BGR versions of training images) looks like this.
+The results obtained look very promising. Results after training the model for 150, and 250 epochs on the extended dataset (RGB + BGR versions of training images) looks like this.
 
-![](img/150.png)
+150 Epochs             |  250 Epochs
+:-------------------------:|:-------------------------:
+![](img/150.png)  |  ![](img/250.png)
 
 ### More details on results
 The model learns to generate a posture similar to Zandalari Trolls. An interesting, yet not suprising, fact is, that the network has learned to generate also the WoWHead logo in the background, which was present in most of training images. See the example below. These 2 photos are identical, except I had to raise the brightness to see the "WoWHead logo" in the background. 
 
 Also notice, that the network has learned to generate zandalari toes! There is a clear structure being generated.
 
-![](img/1k_nails.jpg) ![](img/1k_nails_bright.png)
+Grayscale             |  Grayscale with adjusted brightness
+:-------------------------:|:-------------------------:
+![](img/1k_nails.jpg)  |  ![](img/1k_nails_bright.png)
 
 As far as I know, there is no rigorous metric to evaluate the performance of GANs, so a human evaluator needs to assess the quality of generated images. I will update this section when I get results from ie 10.000 epochs. It is clear, though, that the network needs a lot more epochs than ie. a thousand. I will also be expanding the dataset to help the network.
 
