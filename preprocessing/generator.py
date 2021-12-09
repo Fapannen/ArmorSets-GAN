@@ -21,11 +21,14 @@ def generate_real_samples(dataset, n_samples):
 	y = np.ones((n_samples, 1))
 	return X, y
 
-def generate_fake_samples(n_samples, img_height, img_width):
+def generate_fake_samples(n_samples, img_height, img_width, img_channels):
 	# generate uniform random numbers in [0,1]
-	X = np.random.rand(img_height * img_width * n_samples)
+	X = np.random.rand(img_height * img_width * img_channels * n_samples)
 	# reshape into a batch of grayscale images
-	X = X.reshape((n_samples, img_height, img_width, 1))
+	if img_channels == 1:
+		X = X.reshape((n_samples, img_height, img_width, img_channels))
+	else:
+		X = X.reshape((n_samples, img_height, img_width, img_channels, 1))
 	# generate 'fake' class labels (0)
 	y = np.zeros((n_samples, 1))
 	return X, y

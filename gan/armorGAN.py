@@ -13,7 +13,7 @@ from tensorflow.keras.layers import (Dense,
 from tensorflow.keras.optimizers import Adam
 import matplotlib.pyplot as plt
 
-def define_generator(latent_dim, target_img_height, target_img_width):
+def define_generator(latent_dim, target_img_height, target_img_width, target_img_channels):
 	begin_h = int(target_img_height / 4)
 	begin_w = int(target_img_width / 4)
 
@@ -28,7 +28,7 @@ def define_generator(latent_dim, target_img_height, target_img_width):
 	# upsample to the final img dimensions
 	model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(1, (7,7), activation='sigmoid', padding='same'))
+	model.add(Conv2D(target_img_channels, (7,7), activation='sigmoid', padding='same'))
 	return model
 
 # define the standalone discriminator model
@@ -63,11 +63,13 @@ def train_discriminator(model, dataset, n_iter=100, n_batch=16, img_height = 600
 		print('>%d real=%.0f%% fake=%.0f%%' % (i+1, real_acc*100, fake_acc*100))
 
 # use the generator to generate n fake examples, with class labels
-def generate_fake_samples(g_model, latent_dim, n_samples):
+def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 	# generate points in latent space
 	x_input = generator.generate_latent_points(latent_dim, n_samples)
 	# predict outputs
 	X = g_model.predict(x_input)
+	if num_channels == 3:
+		X = np.expand_dims(X, axis=-1)
 	# create 'fake' class labels (0)
 	y = np.zeros((n_samples, 1))
 	return X, y
@@ -96,7 +98,7 @@ def train_gan(gan_model, latent_dim, n_epochs=100, n_batch=16):
 		# update the generator via the discriminator's error
 		gan_model.train_on_batch(x_gan, y_gan)
 
-def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=16):
+def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=16, num_channels=1):
 	bat_per_epo = int(dataset.shape[0] / n_batch)
 	half_batch = int(n_batch / 2)
 	# manually enumerate epochs
@@ -106,7 +108,7 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			# get randomly selected 'real' samples
 			X_real, y_real = generator.generate_real_samples(dataset, half_batch)
 			# generate 'fake' examples
-			X_fake, y_fake = generate_fake_samples(g_model, latent_dim, half_batch)
+			X_fake, y_fake = generate_fake_samples(g_model, latent_dim, half_batch, num_channels)
 			# create training set for the discriminator
 			X, y = np.vstack((X_real, X_fake)), np.vstack((y_real, y_fake))
 			# update discriminator model weights
@@ -121,18 +123,18 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			print('>%d, %d/%d, d=%.3f, g=%.3f' % (i+1, j+1, bat_per_epo, d_loss, g_loss))
 
 		if (i + 1) % 10 == 0:
-			summarize_performance(i, g_model, d_model, dataset, latent_dim)
+			summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
 			# save the generator model tile file
-			filename = 'generator_model_%03d.h5' % (i + 1)
+			filename = 'checkpoints/generator_model_%03d.h5' % (i + 1)
 			g_model.save(filename)
 
-def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100):
+def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100, num_channels=1):
 	# prepare real samples
 	X_real, y_real = generator.generate_real_samples(dataset, n_samples)
 	# evaluate discriminator on real examples
 	_, acc_real = d_model.evaluate(X_real, y_real, verbose=0)
 	# prepare fake examples
-	x_fake, y_fake = generate_fake_samples(g_model, latent_dim, n_samples)
+	x_fake, y_fake = generate_fake_samples(g_model, latent_dim, n_samples, num_channels)
 	# evaluate discriminator on fake examples
 	_, acc_fake = d_model.evaluate(x_fake, y_fake, verbose=0)
 	# summarize discriminator performance
