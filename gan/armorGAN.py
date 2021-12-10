@@ -1,4 +1,3 @@
-import tensorflow as tf
 import numpy as np
 from preprocessing import generator
 from keras.models import Sequential
@@ -11,7 +10,6 @@ from tensorflow.keras.layers import (Dense,
                                      Dropout,
                                      Flatten)
 from tensorflow.keras.optimizers import Adam
-import matplotlib.pyplot as plt
 
 def define_generator(latent_dim, target_img_height, target_img_width, target_img_channels):
 	begin_h = int(target_img_height / 4)

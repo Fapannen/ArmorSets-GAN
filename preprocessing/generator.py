@@ -3,6 +3,7 @@ from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
 import numpy as np
+from hparams import hparams
 
 def generate_recolors(path):
     files = [f for f in listdir(path) if isfile(join(path + "/", f)) and f.endswith('png')]
@@ -13,12 +14,16 @@ def generate_recolors(path):
         cv2.imwrite(join(path + "/" + files[i].replace(".png", "") + "_recolor.png"), image_rgb)
 
 def generate_real_samples(dataset, n_samples):
+	config = hparams.Config()
 	# choose random instances
 	ix = np.random.randint(0, dataset.shape[0], n_samples)
 	# retrieve selected images
 	X = dataset[ix]
 	# generate 'real' class labels (1)
-	y = np.ones((n_samples, 1))
+	if config.LABEL_SMOOTHING:
+		y = np.full((n_samples, 1), 0.9)
+	else:
+		y = np.ones((n_samples, 1))
 	return X, y
 
 def generate_fake_samples(n_samples, img_height, img_width, img_channels):

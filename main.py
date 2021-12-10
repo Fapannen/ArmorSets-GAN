@@ -3,7 +3,6 @@ from preprocessing import generator
 from hparams import hparams
 from gan import armorGAN
 import tensorflow as tf
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
@@ -26,17 +25,13 @@ def main():
         cv2.imwrite('test1.png', np.array(images[58]) * 255)
         cv2.imwrite('test2.png', np.array(images[59]) * 255)
 
-
-    # define latent space dimension
-    noise_length = 100
-
     # define the generator with target IMG height and IMG width
-    gan_generator = armorGAN.define_generator(noise_length, config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS)
+    gan_generator = armorGAN.define_generator(config.LATENT_DIM, config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS)
 
     gan_discriminator = armorGAN.define_discriminator((config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS))
 
     # Create a random noise and generate a sample
-    noise = tf.random.normal([1, noise_length])
+    noise = tf.random.normal([1, config.LATENT_DIM])
     generated_image = gan_generator(noise, training=False)
     # Visualize the generated sample
     print(generated_image.shape)
@@ -54,6 +49,6 @@ def main():
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
 
-    armorGAN.train(gan_generator, gan_discriminator, gan, images, noise_length, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS)
+    armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS)
 
 main()

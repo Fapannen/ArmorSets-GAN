@@ -4,6 +4,7 @@ import tensorflow as tf
 from os import listdir
 from os.path import isfile, join
 from tqdm import tqdm
+from hparams import hparams
 
 """
 Load images from 'path' directory, convert them to RGB and return a list of them 
@@ -11,8 +12,9 @@ Load images from 'path' directory, convert them to RGB and return a list of them
 def load_images(path, mode, only_zandalari=False):
     files = [f for f in listdir(path) if isfile(join(path + "/", f)) and f.endswith('png')]
 
-    # Keep only zandalaris, dataset contains also other races. Defaults to false
-    if only_zandalari:
+    # Keep only zandalaris, dataset contains also other races. Defaults to True
+    c = hparams.Config()
+    if c.ONLY_ZANDALARI:
         files = [f for f in files if "_ZT" in f]
 
     ret = []
@@ -43,7 +45,6 @@ def resize_to_dims(images, dims):
 
 def normalize_image(image):
     # normalize images to [-1, 1] range
-    # TBD mean subtraction, stddev division if necessary
     return cv2.normalize(image , None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
 """
