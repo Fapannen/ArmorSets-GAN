@@ -27,8 +27,8 @@ def generate_real_samples(dataset, n_samples):
 	return X, y
 
 def generate_fake_samples(n_samples, img_height, img_width, img_channels):
-	# generate uniform random numbers in [0,1]
-	X = np.random.uniform(low=0.5, high=13.3, size=(img_height * img_width * img_channels * n_samples,))
+	# generate uniform random numbers in [-1,1]
+	X = np.random.uniform(low=-1, high=1, size=(img_height * img_width * img_channels * n_samples,))
 	# reshape into a batch of grayscale images
 	if img_channels == 1:
 		X = X.reshape((n_samples, img_height, img_width, img_channels))
