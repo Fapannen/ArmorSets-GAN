@@ -19,11 +19,11 @@ def main():
 
     # Draw an example images
     if config.IMG_CHANNELS == 3:
-        cv2.imwrite('test1.png', np.array(images[58, :, :, :, 0]) * 255)
-        cv2.imwrite('test2.png', np.array(images[59, :, :, :, 0]) * 255)
+        cv2.imwrite('test1.png', (np.array(images[58, :, :, :, 0]) * 127.5) + 127.5)
+        cv2.imwrite('test2.png', (np.array(images[59, :, :, :, 0]) * 127.5) + 127.5)
     else: # if grayscale
-        cv2.imwrite('test1.png', np.array(images[58]) * 255)
-        cv2.imwrite('test2.png', np.array(images[59]) * 255)
+        cv2.imwrite('test1.png', (np.array(images[58]) * 127.5) + 127.5)
+        cv2.imwrite('test2.png', (np.array(images[59]) * 127.5) + 127.5)
 
     # define the generator with target IMG height and IMG width
     gan_generator = armorGAN.define_generator(config.LATENT_DIM, config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS)

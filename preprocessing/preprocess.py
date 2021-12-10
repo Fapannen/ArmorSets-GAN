@@ -45,7 +45,7 @@ def resize_to_dims(images, dims):
 
 def normalize_image(image):
     # normalize images to [-1, 1] range
-    return cv2.normalize(image , None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    return cv2.normalize(image , None, alpha=-1, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
 """
 Loads an image dataset from 'path' folder. Maps the size of images to the average of those found in the dataset.

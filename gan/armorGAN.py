@@ -10,10 +10,12 @@ from tensorflow.keras.layers import (Dense,
                                      Dropout,
                                      Flatten)
 from tensorflow.keras.optimizers import Adam
+from hparams import hparams
 
 def define_generator(latent_dim, target_img_height, target_img_width, target_img_channels):
 	begin_h = int(target_img_height / 4)
 	begin_w = int(target_img_width / 4)
+	c = hparams.Config()
 
 	model = Sequential()
 	n_nodes = 128 * begin_h * begin_w # 128 neurons, quarter of the final image
@@ -26,7 +28,7 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	# upsample to the final img dimensions
 	model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(target_img_channels, (7,7), activation='sigmoid', padding='same'))
+	model.add(Conv2D(target_img_channels, (7,7), activation=c.GEN_ACT, padding='same'))
 	return model
 
 # define the standalone discriminator model
