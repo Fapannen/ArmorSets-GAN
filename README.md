@@ -1,10 +1,10 @@
 # ArmorSets-GAN
 
-In this repository, I tried to create a Generative Adversarial Network (GAN) for generation of World of Warcraft images. On the images, there shall be new, not yet seen, so called "transmogs" for Zandalari Trolls race. I had this idea in my head for quite some time, and I finally took some time to spend it on this project. Let's get started.
+In this repository, I tried to create a Generative Adversarial Network (GAN) for generation of World of Warcraft images. In the images, there shall be new, not yet seen, so called "transmogs" for Zandalari Trolls race. I had this idea in my head for quite some time, and I finally took some time to spend on this project. Let's get started.
 
 # TO BE DONE
 1) Resume training function
-2) Explore optimizations
+2) Explore optimizations - Label smoothing, Different learning rates in generator and discriminator
 
 ## Introduction
 In WoW, "transmog" is basically a "fashion style" that you apply to your character. Wearing different types of armour can (but don't have to) change your looks. There are specifically created "transmog sets" by the developers, which are usually intended to be well-matched together. Players, of course, experiment and often create nice and unique transmogs by combining several other transmog sets together. Note that a given item may or may not be a part of a transmog set. Since the process of creating a new, nice looking outfit needs a bit of creativity and can be considered an art to some extent, why not use GANs to generate this art? I will not be creating combinations of existing transmogs per se, rather the network shall learn new pieces of armor that could potentially be added to the game.
@@ -62,3 +62,4 @@ As far as I know, there is no rigorous metric to evaluate the performance of GAN
 - [How to develop a generative adversarial network for an mnist handwritten digits from scratch in Keras](https://machinelearningmastery.com/how-to-develop-a-generative-adversarial-network-for-an-mnist-handwritten-digits-from-scratch-in-keras/)
 - [Image generation in 10 minutes with generative adversarial networks](https://towardsdatascience.com/image-generation-in-10-minutes-with-generative-adversarial-networks-c2afc56bfa3b)
 - [Tensorflow on GPU](https://www.tensorflow.org/guide/gpu)
+- [10 Lessons I learned training GANs for a year](https://towardsdatascience.com/10-lessons-i-learned-training-generative-adversarial-networks-gans-for-a-year-c9071159628)
