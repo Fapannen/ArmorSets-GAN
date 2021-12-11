@@ -1,16 +1,16 @@
 import numpy as np
 from preprocessing import generator
 from keras.models import Sequential
+from tensorflow.keras.optimizers import Adam
+from hparams import hparams
 from tensorflow.keras.layers import (Dense,
-                                     BatchNormalization,
                                      LeakyReLU,
                                      Reshape,
                                      Conv2DTranspose,
                                      Conv2D,
                                      Dropout,
                                      Flatten)
-from tensorflow.keras.optimizers import Adam
-from hparams import hparams
+
 
 def define_generator(latent_dim, target_img_height, target_img_width, target_img_channels):
 	begin_h = int(target_img_height / 4)
@@ -26,26 +26,30 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to the final img dimensions
-	model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(128, (6,6), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(target_img_channels, (7,7), activation=c.GEN_ACT, padding='same'))
+	model.add(Conv2D(target_img_channels, (9,9), activation=c.GEN_ACT, padding='same'))
 	return model
+
 
 # define the standalone discriminator model
 def define_discriminator(in_shape=(600,400,1)):
 	model = Sequential()
-	model.add(Conv2D(64, (3,3), strides=(2, 2), padding='same', input_shape=in_shape))
+	model.add(Conv2D(128, (5,5), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.4))
-	model.add(Conv2D(64, (3,3), strides=(2, 2), padding='same'))
+	model.add(Conv2D(128, (3,3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.4))
+	model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
+	model.add(LeakyReLU(alpha=0.2))
 	model.add(Flatten())
 	model.add(Dense(1, activation='sigmoid'))
 	# compile model
 	opt = Adam(learning_rate=0.0002, beta_1=0.5)
 	model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
 	return model
+
 
 def train_discriminator(model, dataset, n_iter=100, n_batch=16, img_height = 600, img_width=400):
 	half_batch = int(n_batch / 2)
@@ -62,6 +66,7 @@ def train_discriminator(model, dataset, n_iter=100, n_batch=16, img_height = 600
 		# summarize performance
 		print('>%d real=%.0f%% fake=%.0f%%' % (i+1, real_acc*100, fake_acc*100))
 
+
 # use the generator to generate n fake examples, with class labels
 def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 	# generate points in latent space
@@ -73,6 +78,7 @@ def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 	# create 'fake' class labels (0)
 	y = np.zeros((n_samples, 1))
 	return X, y
+
 
 def define_gan(g_model, d_model):
 	# make weights in the discriminator not trainable
@@ -88,6 +94,7 @@ def define_gan(g_model, d_model):
 	model.compile(loss='binary_crossentropy', optimizer=opt)
 	return model
 
+
 def train_gan(gan_model, latent_dim, n_epochs=100, n_batch=16):
 	# manually enumerate epochs
 	for i in range(n_epochs):
@@ -98,7 +105,9 @@ def train_gan(gan_model, latent_dim, n_epochs=100, n_batch=16):
 		# update the generator via the discriminator's error
 		gan_model.train_on_batch(x_gan, y_gan)
 
+
 def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=16, num_channels=1):
+	c = hparams.Config()
 	bat_per_epo = int(dataset.shape[0] / n_batch)
 	half_batch = int(n_batch / 2)
 	# manually enumerate epochs
@@ -125,8 +134,14 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 		if (i + 1) % 10 == 0:
 			summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
 			# save the generator model tile file
-			filename = 'checkpoints/generator_model_%03d.h5' % (i + 1)
+			filename = 'checkpoints/generator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
 			g_model.save(filename)
+
+		if (i + 1) % 100 == 0:
+			# Save also the discriminator model if needed to resume the training
+			filename = 'checkpoints/discriminator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
+			d_model.save(filename)
+
 
 def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100, num_channels=1):
 	# prepare real samples

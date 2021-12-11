@@ -4,8 +4,8 @@ class Config:
 
     def __init__(self):
         # General hyperparameters
-        self.IMG_HEIGHT = 360
-        self.IMG_WIDTH = 240
+        self.IMG_HEIGHT = 300
+        self.IMG_WIDTH = 200
         self.MODE = cv2.IMREAD_COLOR
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
         self.BATCH_SIZE = 16

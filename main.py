@@ -1,10 +1,11 @@
+import tensorflow as tf
+import numpy as np
+import cv2
 from preprocessing import preprocess
 from preprocessing import generator
 from hparams import hparams
 from gan import armorGAN
-import tensorflow as tf
-import numpy as np
-import cv2
+
 
 def main():
     # Generate 2x more images for training (Use only on the first run, without recolors)
