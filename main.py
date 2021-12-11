@@ -15,8 +15,6 @@ def main():
     # And only them load them for use
     images = preprocess.load_and_preprocess("dataset", (config.IMG_WIDTH, config.IMG_HEIGHT), config.MODE)
 
-    # train_dataset = preprocess.prepare_tensors(images) # Tf.Dataset instance
-
     # Draw an example images
     if config.IMG_CHANNELS == 3:
         cv2.imwrite('test1.png', (np.array(images[58, :, :, :, 0]) * 127.5) + 127.5)
@@ -36,7 +34,6 @@ def main():
     # Visualize the generated sample
     print(generated_image.shape)
     cv2.imwrite('generated.jpg', np.array(generated_image[0]))
-    #plt.imsave("generated.jpg", generated_image[0])
 
     gan_generator.summary()
     gan_discriminator.summary()
