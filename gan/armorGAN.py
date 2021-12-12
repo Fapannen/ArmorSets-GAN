@@ -106,12 +106,12 @@ def train_gan(gan_model, latent_dim, n_epochs=100, n_batch=16):
 		gan_model.train_on_batch(x_gan, y_gan)
 
 
-def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=16, num_channels=1):
+def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=16, num_channels=1, resumed=0):
 	c = hparams.Config()
 	bat_per_epo = int(dataset.shape[0] / n_batch)
 	half_batch = int(n_batch / 2)
 	# manually enumerate epochs
-	for i in range(n_epochs):
+	for i in range(resumed, n_epochs):
 		# enumerate batches over the training set
 		for j in range(bat_per_epo):
 			# get randomly selected 'real' samples

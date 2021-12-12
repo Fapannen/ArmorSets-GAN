@@ -5,6 +5,7 @@ from preprocessing import preprocess
 from preprocessing import generator
 from hparams import hparams
 from gan import armorGAN
+from keras.models import load_model
 
 
 def main():
@@ -48,5 +49,19 @@ def main():
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
 
     armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS)
+
+
+def resume_training(path_to_generator, path_to_discriminator, start_from_epoch):
+    config = hparams.Config()
+
+    images = preprocess.load_and_preprocess("dataset", (config.IMG_WIDTH, config.IMG_HEIGHT), config.MODE)
+
+    gan_generator = load_model(path_to_generator)
+
+    gan_discriminator = load_model(path_to_discriminator)
+
+    gan = armorGAN.define_gan(gan_generator, gan_discriminator)
+
+    armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS, resumed=start_from_epoch)
 
 main()
