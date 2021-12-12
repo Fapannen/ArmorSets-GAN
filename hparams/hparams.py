@@ -11,6 +11,8 @@ class Config:
         self.BATCH_SIZE = 16
         self.EPOCHS = 1000
         self.LATENT_DIM = 100
+        self.GEN_CHECKPOINT = 10
+        self.DIS_CHECKPOINT = 100
 
         # Optimization hyperparameters
 

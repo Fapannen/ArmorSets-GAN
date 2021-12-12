@@ -1,6 +1,6 @@
 import numpy as np
 from preprocessing import generator
-from keras.models import Sequential
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from hparams import hparams
 from tensorflow.keras.layers import (Dense,
@@ -125,22 +125,30 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			# prepare points in latent space as input for the generator
 			X_gan = generator.generate_latent_points(latent_dim, n_batch)
 			# create inverted labels for the fake samples
-			y_gan = np.ones((n_batch, 1))
+			if c.LABEL_SMOOTHING:
+				y_gan = np.full((n_batch, 1), 0.9)
+			else:
+				y_gan = np.ones((n_batch, 1))
 			# update the generator via the discriminator's error
 			g_loss = gan_model.train_on_batch(X_gan, y_gan)
 			# summarize loss on this batch
 			print('>%d, %d/%d, d=%.3f, g=%.3f' % (i+1, j+1, bat_per_epo, d_loss, g_loss))
 
-		if (i + 1) % 10 == 0:
+		if (i + 1) % c.GEN_CHECKPOINT == 0:
 			summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
 			# save the generator model tile file
 			filename = 'checkpoints/generator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
 			g_model.save(filename)
 
-		if (i + 1) % 100 == 0:
+		if (i + 1) % c.DIS_CHECKPOINT == 0:
 			# Save also the discriminator model if needed to resume the training
+			# The setting of model.trainable to True and back to False is necessary due to an issue
+			# where if 'trainable' is set to False while saving, the saved model will not contain
+			# optimizer state, which is necessary for continue training. This is a workaround
+			d_model.trainable = True
 			filename = 'checkpoints/discriminator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
 			d_model.save(filename)
+			d_model.trainable = False
 
 
 def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100, num_channels=1):
