@@ -42,6 +42,12 @@ The system, as with most other GANs, consists of two parts, a generator, which i
 
 Since I am working with RGB image inputs, both the discriminator and the generator are convolutional neural networks. The discriminator is a common CNN with no special features, while the generator is an "inverted" convolutional neural network, employing `Conv2DTranspose` (Transpose Convolution) operation, which enables the network to generate an image from a 1-dimensional vector.
 
+The generator generates (And the discriminator takes) a (300x200) RGB image. Note that this also has an influence on the quality of the output, since although it is quite large image in the context of CNNs, for human eye it is still not good enough. For optimal performance, I would like to generate images of the same size that the training images are, which is around (1200x800), but training such network is very computationally demanding and currently not feasible in my home settings.
+
+Taking a great inspiration in blogs about generating MNIST dataset using GANs (See sources section below), I had to modify my architecture in a way that allowed the network to percieve larger features. This means enlarging the kernel sizes up to (9, 9) and also adding more kernels per layer.
+
+In my experiments, adding more filters (in the generator network) results in better generator outputs, but carries the risk of the generator being superior to the discriminator.
+
 ## Results
 I have trained my model for about 1800 epochs. The training took about 60 hours on an RTX 2080 GPU. If you are curious about the detailed process, you can see some of the outputs in the `img` folder, where examples of images are located. If they have a number prefix, that prefix specifies the epoch after which these images have been generated. Please note, that these images are not a representative example, they are cherry-picked by me, as I found them interesting and worth saving. For my personal evaluation, I have created 25 images from random vectors and tried to examine them personally and evaluate their quality. For example, after given epochs (1050, 1640, respectively), some notable outputs have been generated. See below.
 
