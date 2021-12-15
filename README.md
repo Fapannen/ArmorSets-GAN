@@ -1,6 +1,6 @@
 # ArmorSets-GAN
 
-In this repository, I tried to create a Generative Adversarial Network (GAN) for generation of World of Warcraft images. In the images, there shall be new, not yet seen, so-called "transmogs" (outfits) for Zandalari Trolls race. I had this idea in my head for quite some time, and I finally took some time to spend on this project. Let's get started.
+In this repository, I tried to create a Generative Adversarial Network (GAN) for generation of World of Warcraft images. In the images, there shall be new, not yet seen, so-called "transmogs" (outfits) for Zandalari Trolls race. I had this idea in my head for quite some time, and I finally took some time to spend on this project. This project is being actively worked on and is expected to be updated frequently. Let's get started.
 
 <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/publ.png" width="800" height="600" />
 
