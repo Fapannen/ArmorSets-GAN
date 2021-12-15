@@ -23,7 +23,7 @@ An example image from the dataset is the following.
 
 ![](img/test1.png) ![](img/test1_gray.png)
 
-The first version of the dataset is available for [download](https://drive.google.com/file/d/1qCJO6fglDQ8qKJPVduYdcdQuxru9PDwP/view?usp=sharing)
+The first version of the dataset is available for [download](https://drive.google.com/file/d/1m38LDiNH5U9QnD2XNsa8EaUuJvYQZlTI/view?usp=sharing)
 
 ### Why Zandalari Trolls?
 In my **subjective** opinion, Zandalari Trolls and Humans have the best body posture. If you are familiar with the races, for example, Trolls, or Orcs are usually stooped and look unnatural to me. Zandalari Trolls are also more muscular and greater in size than Humans. As they are the true alphas of the game, I decided to show my love for them this way.
