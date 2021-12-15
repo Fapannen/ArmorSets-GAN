@@ -2,6 +2,8 @@
 
 In this repository, I tried to create a Generative Adversarial Network (GAN) for generation of World of Warcraft images. In the images, there shall be new, not yet seen, so-called "transmogs" (outfits) for Zandalari Trolls race. I had this idea in my head for quite some time, and I finally took some time to spend on this project. Let's get started.
 
+<img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/publ.png" width="800" height="600" />
+
 ## Introduction
 In WoW, "transmog" is a "fashion style" that you apply to your character. Wearing different types of armor can (but don't have to) change your looks. There are specifically created "transmog sets" by the developers, which are usually intended to be well-matched together. Players, of course, experiment and often create nice and unique transmogs by combining several other transmog sets together. Note that a given item may or may not be a part of a transmog set. Since the process of creating a new, nice-looking outfit needs a bit of creativity and can be considered an art to some extent, why not use GANs to generate this art? I will not be creating combinations of existing transmogs per se, rather the network shall learn new pieces of armor that could potentially be added to the game.
 
