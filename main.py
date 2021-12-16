@@ -6,7 +6,7 @@ from preprocessing import generator
 from hparams import hparams
 from gan import armorGAN
 from keras.models import load_model
-
+from keras.utils.vis_utils import plot_model
 
 def main():
     # Generate 2x more images for training (Use only on the first run, without recolors)
@@ -47,6 +47,10 @@ def main():
     print(fake_samples[0].shape)
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
+
+    plot_model(gan_generator, to_file='img/gan_generator_plot.png', show_shapes=True, show_layer_names=True)
+    plot_model(gan_discriminator, to_file='img/gan_discriminator_plot.png', show_shapes=True, show_layer_names=True)
+    plot_model(gan, to_file='img/gan_plot.png', show_shapes=True, show_layer_names=True)
 
     armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS)
 
