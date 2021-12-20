@@ -9,12 +9,15 @@ class Config:
         self.MODE = cv2.IMREAD_COLOR
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
         self.BATCH_SIZE = 16
-        self.EPOCHS = 1000
+        self.EPOCHS = 10000
         self.LATENT_DIM = 100
         self.GEN_CHECKPOINT = 10
         self.DIS_CHECKPOINT = 100
 
         # Optimization hyperparameters
+        self.LR_DECREASE = True
+        self.LR_DECREASE_AFTER = 1000
+        self.LR_DECREASE_CONST = 0.1
 
         # Select an activation function to use for last generator layer. Tanh is recommended.
         self.GEN_ACT = "tanh" # or "sigmoid", but tanh is preferred

@@ -3,6 +3,7 @@ from preprocessing import generator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from hparams import hparams
+from keras import backend as K
 from tensorflow.keras.layers import (Dense,
                                      LeakyReLU,
                                      Reshape,
@@ -23,10 +24,12 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Reshape((begin_h, begin_w, 128)))
 	# upsample to half the size of the final image
-	model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(64, (4,4), strides=(2,2), padding='same'))
+	model.add(LeakyReLU(alpha=0.2))
+	model.add(Conv2D(128, (4,4), strides=(1,1), padding="same"))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to the final img dimensions
-	model.add(Conv2DTranspose(128, (6,6), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(256, (6,6), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Conv2D(target_img_channels, (9,9), activation=c.GEN_ACT, padding='same'))
 	return model
@@ -35,10 +38,13 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 # define the standalone discriminator model
 def define_discriminator(in_shape=(600,400,1)):
 	model = Sequential()
-	model.add(Conv2D(128, (5,5), strides=(2, 2), padding='same', input_shape=in_shape))
+	model.add(Conv2D(256, (7,7), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.4))
-	model.add(Conv2D(128, (3,3), strides=(2, 2), padding='same'))
+	model.add(Conv2D(128, (5,5), strides=(2, 2), padding='same'))
+	model.add(LeakyReLU(alpha=0.2))
+	model.add(Dropout(0.4))
+	model.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.4))
 	model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
@@ -133,6 +139,10 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			g_loss = gan_model.train_on_batch(X_gan, y_gan)
 			# summarize loss on this batch
 			print('>%d, %d/%d, d=%.3f, g=%.3f' % (i+1, j+1, bat_per_epo, d_loss, g_loss))
+
+		if (i + 1) % c.LR_DECREASE_AFTER == 0:
+			if c.LR_DECREASE:
+				K.set_value(gan_model.optimizer.learning_rate, 0.00002)
 
 		if (i + 1) % c.GEN_CHECKPOINT == 0:
 			summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
