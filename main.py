@@ -61,11 +61,18 @@ def resume_training(path_to_generator, path_to_discriminator, start_from_epoch):
     images = preprocess.load_and_preprocess("dataset", (config.IMG_WIDTH, config.IMG_HEIGHT), config.MODE)
 
     gan_generator = load_model(path_to_generator)
+    gan_generator.summary()
 
     gan_discriminator = load_model(path_to_discriminator)
+    gan_discriminator.summary()
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
 
+    plot_model(gan_generator, to_file='img/gan_generator_plot.png', show_shapes=True, show_layer_names=True)
+    plot_model(gan_discriminator, to_file='img/gan_discriminator_plot.png', show_shapes=True, show_layer_names=True)
+    plot_model(gan, to_file='img/gan_plot.png', show_shapes=True, show_layer_names=True)
+
     armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS, resumed=start_from_epoch)
 
-main()
+#main()
+resume_training('checkpoints/generator_model_323_1700.h5', "checkpoints/discriminator_model_323_1700.h5", 1700)

@@ -21,7 +21,7 @@ def generate_real_samples(dataset, n_samples):
 	X = dataset[ix]
 
 	# add noise to real images if enabled
-	if config.DISC_NOISE:
+	if config.DISC_NOISE_INPUT:
 		if config.IMG_CHANNELS == 3:
 			noise = np.random.normal(0, config.LABEL_NOISE_VAR, (n_samples ,config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS, 1))
 		if config.IMG_CHANNELS == 1:

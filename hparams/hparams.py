@@ -32,8 +32,12 @@ class Config:
         self.LABEL_NOISE_VAR = 0.1 # (The +- range from 0.1 and 0.9)
 
         # Adding noise to discriminator inputs
-        self.DISC_NOISE = True
+        self.DISC_NOISE_INPUT = True
         self.DISC_NOISE_VAR = (1 / 255.0) ** 2
+
+        self.DISC_NOISE_ALL = True
+        self.DISC_NOISE_LAYER_VAR = 0.1
+
 
         # Keep only Zandalari Trolls training images
         self.ONLY_ZANDALARI = True

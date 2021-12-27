@@ -89,7 +89,7 @@ def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 		X = np.expand_dims(X, axis=-1)
 
 	# add noise to generated images if enabled
-	if c.DISC_NOISE:
+	if c.DISC_NOISE_INPUT:
 		if num_channels == 3:
 			noise = np.random.normal(0, c.LABEL_NOISE_VAR, (n_samples ,c.IMG_HEIGHT, c.IMG_WIDTH, c.IMG_CHANNELS, 1))
 		if num_channels == 1:
