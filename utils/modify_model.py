@@ -5,7 +5,7 @@ from tensorflow.keras.layers import GaussianNoise
 
 def add_gaussian_noise_disc(path_to_discriminator, path_to_output):
     old_model = load_model(path_to_discriminator)
-    new_model = Sequential()
+    new_model = Sequential(name="gaussian_sequential") # Need to set a name, otherwise it will conflict
 
     for layer in old_model.layers:
         if "conv2d" in layer.name:
@@ -30,7 +30,7 @@ def add_gaussian_noise_disc(path_to_discriminator, path_to_output):
     return new_model
 
 
-m = load_model("../checkpoints/discriminator_model_323_1800.h5")
-n = add_gaussian_noise_disc("../checkpoints/discriminator_model_323_1800.h5", "../checkpoints/discriminator_model_gauss_1800.h5")
+m = load_model("../checkpoints/discriminator_model_323_1900.h5")
+n = add_gaussian_noise_disc("../checkpoints/discriminator_model_323_1900.h5", "../checkpoints/discriminator_model_gauss_1900.h5")
 
 n.summary()
