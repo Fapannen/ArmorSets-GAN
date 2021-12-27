@@ -22,6 +22,10 @@ def generate_real_samples(dataset, n_samples):
 	# generate 'real' class labels (1)
 	if config.LABEL_SMOOTHING:
 		y = np.full((n_samples, 1), 0.9)
+		if config.LABEL_NOISE:
+			label_noise = np.array(np.random.uniform(low=-config.LABEL_NOISE_VAR, high=config.LABEL_NOISE_VAR, size=n_samples))
+			y = y[0] + label_noise
+			y = np.expand_dims(y, axis=-1)
 	else:
 		y = np.ones((n_samples, 1))
 	return X, y

@@ -23,30 +23,35 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(Dense(n_nodes, input_dim=latent_dim))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Reshape((begin_h, begin_w, 128)))
-	# upsample to half the size of the final image
-	model.add(Conv2DTranspose(64, (4,4), strides=(2,2), padding='same'))
+	model.add(Conv2D(256, (5,5), strides=(1, 1), padding="same"))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(128, (4,4), strides=(1,1), padding="same"))
+	model.add(Conv2D(128, (5,5), strides=(1,1), padding="same"))
+	model.add(LeakyReLU(alpha=0.2))
+	# upsample to half the size of the final image
+	model.add(Conv2DTranspose(128, (5,5), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to the final img dimensions
-	model.add(Conv2DTranspose(256, (6,6), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(256, (7,7), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(target_img_channels, (9,9), activation=c.GEN_ACT, padding='same'))
+	model.add(Conv2D(target_img_channels, (11,11), activation=c.GEN_ACT, padding='same'))
 	return model
 
 
 # define the standalone discriminator model
 def define_discriminator(in_shape=(600,400,1)):
 	model = Sequential()
-	model.add(Conv2D(256, (7,7), strides=(2, 2), padding='same', input_shape=in_shape))
+	model.add(Conv2D(512, (13,13), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Dropout(0.4))
-	model.add(Conv2D(128, (5,5), strides=(2, 2), padding='same'))
+	model.add(Dropout(0.2))
+	model.add(Conv2D(256, (5,5), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Dropout(0.4))
+	model.add(Dropout(0.2))
+	model.add(Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
+	model.add(LeakyReLU(alpha=0.2))
+	model.add(Dropout(0.2))
 	model.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Dropout(0.4))
+	model.add(Dropout(0.2))
 	model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Flatten())
@@ -75,14 +80,20 @@ def train_discriminator(model, dataset, n_iter=100, n_batch=16, img_height = 600
 
 # use the generator to generate n fake examples, with class labels
 def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
+	c = hparams.Config()
 	# generate points in latent space
 	x_input = generator.generate_latent_points(latent_dim, n_samples)
 	# predict outputs
 	X = g_model.predict(x_input)
 	if num_channels == 3:
 		X = np.expand_dims(X, axis=-1)
-	# create 'fake' class labels (0)
-	y = np.zeros((n_samples, 1))
+	# create 'fake' class labels
+	if c.LABEL_NOISE:
+		label_noise = np.random.uniform(low=-c.LABEL_NOISE_VAR, high=c.LABEL_NOISE_VAR, size=n_samples)
+		y = np.full((n_samples), 0.1) + label_noise
+		y = np.expand_dims(y, axis=-1)
+	else:
+		y = np.zeros((n_samples, 1))
 	return X, y
 
 
@@ -145,7 +156,8 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 				K.set_value(gan_model.optimizer.learning_rate, 0.00002)
 
 		if (i + 1) % c.GEN_CHECKPOINT == 0:
-			summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
+			if c.SUMMARIZE_PERFORMANCE:
+				summarize_performance(i, g_model, d_model, dataset, latent_dim, num_channels=num_channels)
 			# save the generator model tile file
 			filename = 'checkpoints/generator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
 			g_model.save(filename)
