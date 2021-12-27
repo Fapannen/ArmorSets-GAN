@@ -87,6 +87,16 @@ def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 	X = g_model.predict(x_input)
 	if num_channels == 3:
 		X = np.expand_dims(X, axis=-1)
+
+	# add noise to generated images if enabled
+	if c.DISC_NOISE:
+		if num_channels == 3:
+			noise = np.random.normal(0, c.LABEL_NOISE_VAR, (n_samples ,c.IMG_HEIGHT, c.IMG_WIDTH, c.IMG_CHANNELS, 1))
+		if num_channels == 1:
+			noise = np.random.normal(0, c.LABEL_NOISE_VAR, (n_samples, c.IMG_HEIGHT, c.IMG_WIDTH, 1))
+
+		X += noise
+
 	# create 'fake' class labels
 	if c.LABEL_NOISE:
 		label_noise = np.random.uniform(low=-c.LABEL_NOISE_VAR, high=c.LABEL_NOISE_VAR, size=n_samples)
@@ -94,6 +104,7 @@ def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 		y = np.expand_dims(y, axis=-1)
 	else:
 		y = np.zeros((n_samples, 1))
+
 	return X, y
 
 

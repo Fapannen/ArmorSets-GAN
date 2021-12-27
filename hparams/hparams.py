@@ -29,12 +29,11 @@ class Config:
         # ie [0.8, 1] for real samples and [0, 0.2] for fake samples
         self.LABEL_SMOOTHING = True
         self.LABEL_NOISE = True
-        self.LABEL_NOISE_VAR = 0.1
+        self.LABEL_NOISE_VAR = 0.1 # (The +- range from 0.1 and 0.9)
 
         # Adding noise to discriminator inputs
-        # TBD not implemented yet
         self.DISC_NOISE = True
-        self.DISC_NOISE_VAR = 1
+        self.DISC_NOISE_VAR = (1 / 255.0) ** 2
 
         # Keep only Zandalari Trolls training images
         self.ONLY_ZANDALARI = True
