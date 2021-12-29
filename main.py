@@ -5,7 +5,7 @@ from preprocessing import preprocess
 from preprocessing import generator
 from hparams import hparams
 from gan import armorGAN
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from keras.utils.vis_utils import plot_model
 
 def main():
@@ -75,4 +75,4 @@ def resume_training(path_to_generator, path_to_discriminator, start_from_epoch):
     armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS, resumed=start_from_epoch)
 
 #main()
-resume_training('checkpoints/generator_model_323_1700.h5', "checkpoints/discriminator_model_323_1700.h5", 1700)
+resume_training('checkpoints/generator_model_323_2400.h5', "checkpoints/discriminator_model_323_2400.h5", 2400)

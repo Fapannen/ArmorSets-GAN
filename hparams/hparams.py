@@ -16,6 +16,7 @@ class Config:
         self.SUMMARIZE_PERFORMANCE = False
 
         # Optimization hyperparameters
+        self.LR_INITIAL = 0.00002
         self.LR_DECREASE = True
         self.LR_DECREASE_AFTER = 1000
         self.LR_DECREASE_CONST = 0.1
@@ -29,15 +30,15 @@ class Config:
         # ie [0.8, 1] for real samples and [0, 0.2] for fake samples
         self.LABEL_SMOOTHING = True
         self.LABEL_NOISE = True
-        self.LABEL_NOISE_VAR = 0.1 # (The +- range from 0.1 and 0.9)
+        self.LABEL_NOISE_VAR = 0.15 # (The +- range from 0.1 and 0.9)
 
         # Adding noise to discriminator inputs
         self.DISC_NOISE_INPUT = True
-        self.DISC_NOISE_VAR = (1 / 255.0) ** 2
+        self.DISC_NOISE_VAR = 1 / 255.0
 
+        # Adding noise to all discriminator layers (does not work only by enabling this)
         self.DISC_NOISE_ALL = True
         self.DISC_NOISE_LAYER_VAR = 0.1
-
 
         # Keep only Zandalari Trolls training images
         self.ONLY_ZANDALARI = True

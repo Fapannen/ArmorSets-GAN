@@ -109,6 +109,7 @@ def generate_fake_samples(g_model, latent_dim, n_samples, num_channels):
 
 
 def define_gan(g_model, d_model):
+	c = hparams.Config()
 	# make weights in the discriminator not trainable
 	d_model.trainable = False
 	# connect them
@@ -118,7 +119,7 @@ def define_gan(g_model, d_model):
 	# add the discriminator
 	model.add(d_model)
 	# compile model
-	opt = Adam(learning_rate=0.0002, beta_1=0.5)
+	opt = Adam(learning_rate=c.LR_INITIAL, beta_1=0.5)
 	model.compile(loss='binary_crossentropy', optimizer=opt)
 	return model
 
@@ -155,6 +156,11 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			# create inverted labels for the fake samples
 			if c.LABEL_SMOOTHING:
 				y_gan = np.full((n_batch, 1), 0.9)
+				if c.LABEL_NOISE:
+					label_noise = np.array(
+						np.random.uniform(low=-c.LABEL_NOISE_VAR, high=c.LABEL_NOISE_VAR, size=n_batch))
+					y_gan = y_gan[0] + label_noise
+					y_gan = np.expand_dims(y_gan, axis=-1)
 			else:
 				y_gan = np.ones((n_batch, 1))
 			# update the generator via the discriminator's error
@@ -164,7 +170,9 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 
 		if (i + 1) % c.LR_DECREASE_AFTER == 0:
 			if c.LR_DECREASE:
-				K.set_value(gan_model.optimizer.learning_rate, 0.00002)
+				print("Updating Learning rate...")
+				K.set_value(gan_model.optimizer.learning_rate, gan_model.optimizer.learning_rate * c.LR_DECREASE_CONST)
+				K.set_value(d_model.optimizer.learning_rate, d_model.optimizer.learning_rate * c.LR_DECREASE_CONST)
 
 		if (i + 1) % c.GEN_CHECKPOINT == 0:
 			if c.SUMMARIZE_PERFORMANCE:

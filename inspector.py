@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import argparse
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from preprocessing import generator
 from hparams import hparams
 
