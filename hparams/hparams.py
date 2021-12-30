@@ -16,7 +16,7 @@ class Config:
         self.SUMMARIZE_PERFORMANCE = False
 
         # Optimization hyperparameters
-        self.LR_INITIAL = 0.00002
+        self.LR_INITIAL = 0.000002
         self.LR_DECREASE = True
         self.LR_DECREASE_AFTER = 1000
         self.LR_DECREASE_CONST = 0.1
