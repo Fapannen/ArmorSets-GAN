@@ -9,7 +9,7 @@ config = hparams.Config()
 
 parser = argparse.ArgumentParser(description='Parser for generator results inspection')
 parser.add_argument('--epochs', type=int, help='Which epoch to generate results from')
-parser.add_argument('--num_samples', type=int, default=100, help="How many images you want to generate")
+parser.add_argument('--num_samples', type=int, default=25, help="How many images you want to generate")
 parser.add_argument('--inspect_index', type=int, default=None, help="Which dimension from latent space to inspect")
 
 args = parser.parse_args()
@@ -17,9 +17,9 @@ args = parser.parse_args()
 model_name = "0" + str(args.epochs) if args.epochs < 100 else str(args.epochs)
 
 # load model
-model = load_model('checkpoints/generator_model_323_' + model_name + '.h5')
+model = load_model('checkpoints/generator_model_113_' + model_name + '.h5')
 # generate images
-latent_points = generator.generate_latent_points(100, args.num_samples)
+latent_points = generator.generate_latent_points(config.LATENT_DIM, args.num_samples)
 
 if args.inspect_index is not None:
     increment = 2 / float(args.num_samples)
