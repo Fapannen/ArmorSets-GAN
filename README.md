@@ -56,7 +56,7 @@ You can see the generator and discriminator model summary below.
                      **GENERATOR**                                             **DISCRIMINATOR**
 </pre>
 
-<img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_generator_plot.png" width="450" height="1200" />  <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_discriminator_plot.png" width="450" height="1200" />
+<img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_generator_plot.png" width="425" height="1200" />  <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_discriminator_plot.png" width="425" height="1200" />
 
 ## Results
 ### Before 3000 epochs
