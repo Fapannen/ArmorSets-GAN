@@ -88,11 +88,13 @@ I swept the internet for optimization methods, and I have employed the following
   - ADAM optimizer in both discriminator and generator (GAN)
   - Adaptive learning rate (fixed schedule, multiply by `0.1` every 1000 epochs (this has been tweaked mostly manually, though)
   - `tanh` activation function in the last layer of generator model
-  - Label smoothing & label noise
-  - Adding noise to all inputs to the discriminator (both real data samples and generated samples are modified with random normally distributed noise)
-  - GaussianNoise layers before each Conv2D operation in the discriminator
-  - Dropout in discriminator
+  - Label smoothing & label noise (*)
+  - Adding noise to all inputs to the discriminator (both real data samples and generated samples are modified with random normally distributed noise) (*)
+  - GaussianNoise layers before each Conv2D operation in the discriminator (*)
+  - Dropout in discriminator (*)
   - (Consider only Zandalari Trolls in the training dataset)
+
+(*) - Overall, it seems like bullying the discriminator (regularize him, make him generalize better) is the way to go for improving the overall quality of the images.
 
 #### Thoughts
   - It seems like adding more filters in the last `Conv2DTranspose` layer of the generator enabled the model to learn more features (especially Zandalari troll face), though adding more filters slowed down the training process significantly. (None of this is suprising, just worth keeping in mind)
