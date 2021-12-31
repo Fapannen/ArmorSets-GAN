@@ -17,7 +17,7 @@ args = parser.parse_args()
 model_name = "0" + str(args.epochs) if args.epochs < 100 else str(args.epochs)
 
 # load model
-model = load_model('checkpoints/generator_model_113_' + model_name + '.h5')
+model = load_model('checkpoints/generator_model_323_' + model_name + '.h5')
 # generate images
 latent_points = generator.generate_latent_points(config.LATENT_DIM, args.num_samples)
 
