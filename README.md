@@ -53,7 +53,7 @@ In my experiments, adding more filters (in the generator network) results in bet
 You can see the generator and discriminator model summary below.
 
 <pre>
-                     **GENERATOR**                                             **DISCRIMINATOR**
+                     **GENERATOR**                                    **DISCRIMINATOR**
 </pre>
 
 <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_generator_plot.png" width="400" height="1200" />  <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/gan_discriminator_plot.png" width="400" height="1200" />
