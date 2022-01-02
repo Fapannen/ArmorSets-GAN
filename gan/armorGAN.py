@@ -30,7 +30,7 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(Conv2D(128, (5,5), strides=(1,1), padding="same"))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to half the size of the final image
-	model.add(Conv2DTranspose(128, (5,5), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(256, (5,5), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to the final img dimensions
 	model.add(Conv2DTranspose(256, (7,7), strides=(2,2), padding='same'))
@@ -41,6 +41,8 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 
 # define the standalone discriminator model
 def define_discriminator(in_shape=(600,400,1)):
+	c = hparams.Config()
+
 	model = Sequential()
 	model.add(Conv2D(512, (13,13), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
@@ -63,7 +65,7 @@ def define_discriminator(in_shape=(600,400,1)):
 	model.add(Flatten())
 	model.add(Dense(1, activation='sigmoid'))
 	# compile model
-	opt = Adam(learning_rate=0.0002, beta_1=0.5)
+	opt = Adam(learning_rate=c.LR_INITIAL, beta_1=0.5)
 	model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
 	return model
 
