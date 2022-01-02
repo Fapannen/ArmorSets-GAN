@@ -34,7 +34,7 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	# upsample to the final img dimensions
 	model.add(Conv2DTranspose(256, (7,7), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
-	model.add(Conv2D(target_img_channels, (11,11), activation=c.GEN_ACT, padding='same'))
+	model.add(Conv2D(target_img_channels, (15,15), activation=c.GEN_ACT, padding='same'))
 	return model
 
 

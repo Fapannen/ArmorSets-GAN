@@ -10,9 +10,9 @@ class Config:
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
         self.BATCH_SIZE = 8
         self.EPOCHS = 10000
-        self.LATENT_DIM = 100
+        self.LATENT_DIM = 20
         self.GEN_CHECKPOINT = 10
-        self.DIS_CHECKPOINT = 100
+        self.DIS_CHECKPOINT = 50
         self.SUMMARIZE_PERFORMANCE = False
 
         # Optimization hyperparameters
