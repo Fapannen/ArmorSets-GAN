@@ -10,7 +10,8 @@ from tensorflow.keras.layers import (Dense,
                                      Conv2DTranspose,
                                      Conv2D,
                                      Dropout,
-                                     Flatten)
+                                     Flatten,
+									 GaussianNoise)
 
 
 def define_generator(latent_dim, target_img_height, target_img_width, target_img_channels):
@@ -43,15 +44,19 @@ def define_discriminator(in_shape=(600,400,1)):
 	model.add(Conv2D(512, (13,13), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
+	model.add(GaussianNoise(0.1))
 	model.add(Conv2D(256, (5,5), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
+	model.add(GaussianNoise(0.1))
 	model.add(Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
+	model.add(GaussianNoise(0.1))
 	model.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
+	model.add(GaussianNoise(0.1))
 	model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Flatten())
