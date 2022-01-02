@@ -202,8 +202,8 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 
 			X = g_model.predict(latent_points)
 			# plot the result
-			for i in range(len(X)):
-				cv2.imwrite("intermediate" + str(i) + ".jpg", (np.array(X[i]) * 127.5) + 127.5)
+			for i_ in range(len(X)):
+				cv2.imwrite("intermediate" + str(i) + ".jpg", (np.array(X[i_]) * 127.5) + 127.5)
 
 
 def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100, num_channels=1):
