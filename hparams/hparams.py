@@ -15,6 +15,9 @@ class Config:
         self.DIS_CHECKPOINT = 50
         self.SUMMARIZE_PERFORMANCE = False
 
+        # Debugging / control
+        self.INTERMEDIATE_RESULTS = True
+
         # Optimization hyperparameters
         self.LR_INITIAL = 0.0002
         self.LR_DECREASE = True

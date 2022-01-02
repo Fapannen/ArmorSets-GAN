@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 from preprocessing import generator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
@@ -195,6 +196,14 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			filename = 'checkpoints/discriminator_model_' + str(int(c.IMG_HEIGHT / 100)) + str(int(c.IMG_WIDTH / 100)) + str(c.IMG_CHANNELS) +'_%03d.h5' % (i + 1)
 			d_model.save(filename)
 			d_model.trainable = False
+
+		if c.INTERMEDIATE_RESULTS:
+			latent_points = generator.generate_latent_points(c.LATENT_DIM, 1)
+
+			X = g_model.predict(latent_points)
+			# plot the result
+			for i in range(len(X)):
+				cv2.imwrite("intermediate" + str(i) + ".jpg", (np.array(X[i]) * 127.5) + 127.5)
 
 
 def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_samples=100, num_channels=1):
