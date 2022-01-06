@@ -103,7 +103,10 @@ I swept the internet for optimization methods, and I have employed the following
   - Increasing filters size in the last layers of the generator enables the network to generate "bigger" features, like zandalari troll face. Smaller kernels resulted in the generated image to be more fine-grained, but also the colours seemed more random. (See `img/250.png`)
   - Increasing filters size drastically influences training speed. As with other such optimizations, the generated image quality seems to be better with higher filter sizes. Higher filter sizes also call for more of those filters to be able to generate enough features, even further reducing the training efficiency.
   - Seems like the improvement I'd be looking for can be present in [DMM-GAN](https://assets.amazon.science/72/13/e2d786a34e3dbc4ae0056521bd45/detail-me-more-improving-gans-photorealism-of-complex-scenes.pdf). Since my images are quite complex (Naked / semi-naked / fully-armored, Wielding / not wielding a weapon, skirt / no skirt, helmet / no helmet, etc.), I think I could employ the same reasoning about the problem as authors of this paper. They consider living rooms being also complex problem (lamps? Sofas? Windows? TV?) Their solution is also even more computationally demanding and most likely not feasible at the moment.
-  - Maybe attention could help?
+  - Ideas for improvement?
+    1) Attention
+    2) Try cutting both training and generated images in half and let the network create only a half of the character, with the other half being horizontally duplicated
+    3) Try training several generators for parts of the image and them combining them together
 
 ## Sources
 - [WoWHead website](https://www.wowhead.com/)
