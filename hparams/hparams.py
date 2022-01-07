@@ -8,7 +8,7 @@ class Config:
         self.IMG_WIDTH = 200
         self.MODE = cv2.IMREAD_COLOR
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
-        self.BATCH_SIZE = 8
+        self.BATCH_SIZE = 4
         self.EPOCHS = 10000
         self.LATENT_DIM = 20
         self.GEN_CHECKPOINT = 10

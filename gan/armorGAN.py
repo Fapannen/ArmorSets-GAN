@@ -25,7 +25,7 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(Dense(n_nodes, input_dim=latent_dim))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Reshape((begin_h, begin_w, 128)))
-	model.add(Conv2D(256, (5,5), strides=(1, 1), padding="same"))
+	model.add(Conv2D(64, (5,5), strides=(1, 1), padding="same"))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Conv2D(128, (5,5), strides=(1,1), padding="same"))
 	model.add(LeakyReLU(alpha=0.2))
@@ -33,7 +33,7 @@ def define_generator(latent_dim, target_img_height, target_img_width, target_img
 	model.add(Conv2DTranspose(256, (5,5), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	# upsample to the final img dimensions
-	model.add(Conv2DTranspose(256, (7,7), strides=(2,2), padding='same'))
+	model.add(Conv2DTranspose(384, (7,7), strides=(2,2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Conv2D(target_img_channels, (15,15), activation=c.GEN_ACT, padding='same'))
 	return model
@@ -47,19 +47,19 @@ def define_discriminator(in_shape=(600,400,1)):
 	model.add(Conv2D(512, (13,13), strides=(2, 2), padding='same', input_shape=in_shape))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
-	model.add(GaussianNoise(0.1))
+	#model.add(GaussianNoise(0.1))
 	model.add(Conv2D(256, (5,5), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
-	model.add(GaussianNoise(0.1))
+	#model.add(GaussianNoise(0.1))
 	model.add(Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
-	model.add(GaussianNoise(0.1))
+	#model.add(GaussianNoise(0.1))
 	model.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Dropout(0.2))
-	model.add(GaussianNoise(0.1))
+	#model.add(GaussianNoise(0.1))
 	model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
 	model.add(LeakyReLU(alpha=0.2))
 	model.add(Flatten())
@@ -200,7 +200,8 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			d_model.trainable = False
 
 		if c.INTERMEDIATE_RESULTS:
-			latent_points = generator.generate_latent_points(c.LATENT_DIM, 1)
+			latent_points = np.full((c.LATENT_DIM), 0.5)
+			latent_points = latent_points.reshape(1, c.LATENT_DIM)
 
 			X = g_model.predict(latent_points)
 			# plot the result
