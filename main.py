@@ -30,21 +30,8 @@ def main():
 
     gan_discriminator = armorGAN.define_discriminator((config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS))
 
-    # Create a random noise and generate a sample
-    noise = tf.random.normal([1, config.LATENT_DIM])
-    generated_image = gan_generator(noise, training=False)
-    # Visualize the generated sample
-    print(generated_image.shape)
-    cv2.imwrite('generated.jpg', np.array(generated_image[0]))
-
     gan_generator.summary()
     gan_discriminator.summary()
-
-    real_samples = generator.generate_real_samples(images, config.BATCH_SIZE)
-    print(real_samples[0].shape)
-
-    fake_samples = generator.generate_fake_samples(config.BATCH_SIZE, config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS)
-    print(fake_samples[0].shape)
 
     gan = armorGAN.define_gan(gan_generator, gan_discriminator)
 
@@ -74,5 +61,5 @@ def resume_training(path_to_generator, path_to_discriminator, start_from_epoch):
 
     armorGAN.train(gan_generator, gan_discriminator, gan, images, config.LATENT_DIM, config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS, resumed=start_from_epoch)
 
-#main()
-resume_training('checkpoints/generator_model_323_2400.h5', "checkpoints/discriminator_model_323_2400.h5", 2400)
+main()
+#resume_training('checkpoints/generator_model_323_2400.h5', "checkpoints/discriminator_model_323_2400.h5", 2400)
