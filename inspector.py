@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description='Parser for generator results inspe
 parser.add_argument('--epochs', type=int, help='Which epoch to generate results from')
 parser.add_argument('--num_samples', type=int, default=25, help="How many images you want to generate")
 parser.add_argument('--inspect_index', type=int, default=None, help="Which dimension from latent space to inspect")
+parser.add_argument('--interactive', type=bool, default=None, help='Interact with the generation')
 
 args = parser.parse_args()
 
@@ -22,6 +23,9 @@ model = load_model('checkpoints/generator_model_323_' + model_name + '.h5')
 latent_points = generator.generate_latent_points(config.LATENT_DIM, args.num_samples)
 
 if args.inspect_index is not None:
+    latent_points = np.full((config.LATENT_DIM * args.num_samples), 0.5)
+    latent_points = latent_points.reshape(args.num_samples, config.LATENT_DIM)
+
     increment = 2 / float(args.num_samples)
     vals = [increment * i for i in range(args.num_samples)]
 
