@@ -10,7 +10,7 @@ class Config:
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
         self.BATCH_SIZE = 8
         self.EPOCHS = 10000
-        self.LATENT_DIM = 20
+        self.LATENT_DIM = 100
         self.GEN_CHECKPOINT = 10
         self.DIS_CHECKPOINT = 50
         self.SUMMARIZE_PERFORMANCE = False
@@ -19,7 +19,7 @@ class Config:
         self.INTERMEDIATE_RESULTS = True
 
         # Optimization hyperparameters
-        self.LR_INITIAL = 0.0002
+        self.LR_INITIAL = 0.000002
         self.LR_DECREASE = True
         self.LR_DECREASE_AFTER = 1000
         self.LR_DECREASE_CONST = 0.1
@@ -33,7 +33,7 @@ class Config:
         # ie [0.8, 1] for real samples and [0, 0.2] for fake samples
         self.LABEL_SMOOTHING = True
         self.LABEL_NOISE = True
-        self.LABEL_NOISE_VAR = 0.15 # (The +- range from 0.1 and 0.9)
+        self.LABEL_NOISE_VAR = 0.2 # (The +- range from 0.1 and 0.9)
 
         # Adding noise to discriminator inputs
         self.DISC_NOISE_INPUT = True
@@ -41,7 +41,7 @@ class Config:
 
         # Adding noise to all discriminator layers (does not work only by enabling this)
         self.DISC_NOISE_ALL = True
-        self.DISC_NOISE_LAYER_VAR = 0.1
+        self.DISC_NOISE_LAYER_VAR = 0.15
 
         # Keep only Zandalari Trolls training images
         self.ONLY_ZANDALARI = True
