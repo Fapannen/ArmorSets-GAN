@@ -200,7 +200,8 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=100, n_batc
 			d_model.trainable = False
 
 		if c.INTERMEDIATE_RESULTS:
-			latent_points = generator.generate_latent_points(c.LATENT_DIM, 1)
+			latent_points = np.full((c.LATENT_DIM), 0.5)
+			latent_points = latent_points.reshape(1, c.LATENT_DIM)
 
 			X = g_model.predict(latent_points)
 			# plot the result
