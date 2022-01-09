@@ -11,12 +11,12 @@ class Config:
         self.BATCH_SIZE = 8
         self.EPOCHS = 10000
         self.LATENT_DIM = 100
-        self.GEN_CHECKPOINT = 10
-        self.DIS_CHECKPOINT = 50
-        self.SUMMARIZE_PERFORMANCE = False
 
         # Debugging / control
+        self.GEN_CHECKPOINT = 10
+        self.DIS_CHECKPOINT = 50
         self.INTERMEDIATE_RESULTS = True
+        self.SUMMARIZE_PERFORMANCE = False
 
         # Optimization hyperparameters
         self.LR_INITIAL = 0.000002
