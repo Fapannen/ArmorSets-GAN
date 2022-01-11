@@ -115,4 +115,6 @@ I swept the internet for optimization methods, and I have employed the following
 - [Tensorflow on GPU](https://www.tensorflow.org/guide/gpu)
 - [10 Lessons I learned training GANs for a year](https://towardsdatascience.com/10-lessons-i-learned-training-generative-adversarial-networks-gans-for-a-year-c9071159628)
 - [GAN hacks](https://github.com/soumith/ganhacks)
+- [Student performance Dataset](https://archive.ics.uci.edu/ml/machine-learning-databases/00320/)
+  - [And the citation](http://www3.dsi.uminho.pt/pcortez/student.pdf)
 - Keras documentation for modifying layers
