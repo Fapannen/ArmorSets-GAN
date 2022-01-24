@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import cv2
 import argparse
+from os import listdir
+from os.path import isfile, join
 from tensorflow.keras.models import load_model
 
 def vizualize_dataset(path_to_generator, path_to_csv, num_examples):
@@ -48,6 +50,39 @@ def vizualize_dataset(path_to_generator, path_to_csv, num_examples):
         for j in range(len(generated)):
             cv2.imwrite("dataset_viz_" + str(i) + ".jpg", (np.array(generated[j]) * 127.5) + 127.5)
 
+def create_training_timelapse(path, intermediate_steps = 200):
+    def interpolate_images(path_img1, path_img2):
+        im1 = cv2.imread(path_img1, cv2.IMREAD_COLOR)
+        im2 = cv2.imread(path_img2, cv2.IMREAD_COLOR)
+
+        delta = np.array(im2) - np.array(im1)
+        increment = delta / intermediate_steps
+
+        intermediate_images = []
+
+        for i in range(intermediate_steps):
+            intermediate_images.append(np.array(im1) + (i * increment))
+
+        return intermediate_images
+
+    files = [f for f in listdir(path) if isfile(join(path + "/", f)) and f.endswith('jpg') and "intermediate" in f]
+    nums = [int(filename.split("intermediate")[1].split(".jpg")[0]) for filename in files]
+
+    random_image = cv2.imread(files[0], cv2.IMREAD_COLOR)
+    h, w, _ = random_image.shape
+
+
+    video_output = cv2.VideoWriter("training_interpolation.mp4", cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 30, (w, h))
+
+
+    for i in range(min(nums), max(nums) - 1):
+        interpol = interpolate_images("intermediate" + str(i) + ".jpg", "intermediate" + str(i+1) + ".jpg")
+        for img in interpol:
+            video_output.write(img.astype(np.uint8))
+
+    video_output.release()
+
+
 def main():
 
     parser = argparse.ArgumentParser(description='Parser for vizualization')
@@ -60,4 +95,4 @@ def main():
     vizualize_dataset(args.generator, args.csv, args.num_examples)
 
 
-main()
+create_training_timelapse(".")
