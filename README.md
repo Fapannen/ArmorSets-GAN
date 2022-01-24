@@ -85,6 +85,9 @@ More examples, with one bad example included can be found in `img` folder. Note 
 2) **30-300 epochs** : The network learns the shapes and a general idea how the body / armor should look like. It starts to guess more complex shapes.
 3) **300+ epochs** : The network improves in a general way. It learns the color combinations, tries to improve the learned shapes, and tries to figure out more complex features - Troll toes, Troll face, etc.
 
+#### Training progress
+I have created a [video](https://www.youtube.com/watch?v=5FfEFx7ljXs) interpolating some of the training progress.
+
 #### Optimizations
 I swept the internet for optimization methods, and I have employed the following:
   - ADAM optimizer in both discriminator and generator (GAN)
