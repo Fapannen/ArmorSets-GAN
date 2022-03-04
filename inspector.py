@@ -22,6 +22,7 @@ model = load_model('checkpoints/generator_model_323_' + model_name + '.h5')
 # generate images
 latent_points = generator.generate_latent_points(config.LATENT_DIM, args.num_samples)
 
+
 if args.inspect_index is not None:
     latent_points = np.full((config.LATENT_DIM * args.num_samples), 0.5)
     latent_points = latent_points.reshape(args.num_samples, config.LATENT_DIM)

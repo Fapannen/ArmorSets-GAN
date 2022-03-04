@@ -75,4 +75,4 @@ def resume_training(path_to_generator, path_to_discriminator, start_from_epoch):
     armorGAN.train(gan_generator, gan_discriminator, gan, images, gan_generator.input_shape[1], config.EPOCHS, config.BATCH_SIZE, config.IMG_CHANNELS, resumed=start_from_epoch)
 
 #main()
-resume_training('checkpoints/generator_model_323_3000.h5', "checkpoints/discriminator_model_323_3000.h5", 3000)
+resume_training('checkpoints/generator_model_323_750.h5', "checkpoints/discriminator_model_323_750.h5", 750)

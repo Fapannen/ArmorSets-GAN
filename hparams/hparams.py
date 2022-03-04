@@ -4,24 +4,24 @@ class Config:
 
     def __init__(self):
         # General hyperparameters
-        self.IMG_HEIGHT = 300
-        self.IMG_WIDTH = 200
+        self.IMG_HEIGHT = 320
+        self.IMG_WIDTH = 240
         self.MODE = cv2.IMREAD_COLOR
         self.IMG_CHANNELS = 3 if self.MODE == cv2.IMREAD_COLOR else 1
         self.BATCH_SIZE = 8
         self.EPOCHS = 10000
-        self.LATENT_DIM = 100
+        self.LATENT_DIM = 64
 
         # Debugging / control
-        self.GEN_CHECKPOINT = 10
-        self.DIS_CHECKPOINT = 50
+        self.GEN_CHECKPOINT = 25
+        self.DIS_CHECKPOINT = 25
         self.INTERMEDIATE_RESULTS = True
         self.SUMMARIZE_PERFORMANCE = False
 
         # Optimization hyperparameters
-        self.LR_INITIAL = 0.000002
+        self.LR_INITIAL = 0.0001
         self.LR_DECREASE = True
-        self.LR_DECREASE_AFTER = 1000
+        self.LR_DECREASE_AFTER = 2000
         self.LR_DECREASE_CONST = 0.1
 
         # Select an activation function to use for last generator layer. Tanh is recommended.
@@ -33,15 +33,15 @@ class Config:
         # ie [0.8, 1] for real samples and [0, 0.2] for fake samples
         self.LABEL_SMOOTHING = True
         self.LABEL_NOISE = True
-        self.LABEL_NOISE_VAR = 0.2 # (The +- range from 0.1 and 0.9)
+        self.LABEL_NOISE_VAR = 0.1 # (The +- range from 0.1 and 0.9)
 
         # Adding noise to discriminator inputs
         self.DISC_NOISE_INPUT = True
         self.DISC_NOISE_VAR = 1 / 255.0
 
-        # Adding noise to all discriminator layers (does not work only by enabling this)
+        # Adding noise to all discriminator layers
         self.DISC_NOISE_ALL = True
-        self.DISC_NOISE_LAYER_VAR = 0.15
+        self.DISC_NOISE_LAYER_VAR = 0.1
 
         # Keep only Zandalari Trolls training images
         self.ONLY_ZANDALARI = True

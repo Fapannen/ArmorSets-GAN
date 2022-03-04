@@ -50,7 +50,7 @@ def vizualize_dataset(path_to_generator, path_to_csv, num_examples):
         for j in range(len(generated)):
             cv2.imwrite("dataset_viz_" + str(i) + ".jpg", (np.array(generated[j]) * 127.5) + 127.5)
 
-def create_training_timelapse(path, intermediate_steps = 200):
+def create_training_timelapse(path, intermediate_steps = 10):
     def interpolate_images(path_img1, path_img2):
         im1 = cv2.imread(path_img1, cv2.IMREAD_COLOR)
         im2 = cv2.imread(path_img2, cv2.IMREAD_COLOR)
@@ -61,7 +61,8 @@ def create_training_timelapse(path, intermediate_steps = 200):
         intermediate_images = []
 
         for i in range(intermediate_steps):
-            intermediate_images.append(np.array(im1) + (i * increment))
+            tmp = i * np.round(increment)
+            intermediate_images.append(np.array(im1) + tmp)
 
         return intermediate_images
 
@@ -72,13 +73,13 @@ def create_training_timelapse(path, intermediate_steps = 200):
     h, w, _ = random_image.shape
 
 
-    video_output = cv2.VideoWriter("training_interpolation.mp4", cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 30, (w, h))
+    video_output = cv2.VideoWriter("training_interpolation.avi", cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 60, (w, h))
 
 
     for i in range(min(nums), max(nums) - 1):
         interpol = interpolate_images("intermediate" + str(i) + ".jpg", "intermediate" + str(i+1) + ".jpg")
         for img in interpol:
-            video_output.write(img.astype(np.uint8))
+            video_output.write(img.astype(np.uint8) - 128)
 
     video_output.release()
 

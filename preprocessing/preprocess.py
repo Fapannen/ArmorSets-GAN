@@ -54,6 +54,48 @@ def normalize_image(image):
     # normalize images to [-1, 1] range
     return cv2.normalize(image , None, alpha=-1, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
+"""
+Use an image of wowhead background to remove the background from training images
+"""
+def define_background(path_to_background="../img/wowhead_background.png"):
+    background = cv2.imread(path_to_background)
+    ret = []
+
+    rows, cols, _ = background.shape
+
+    for r in range(rows):
+        for c in range(cols):
+            p = background[r, c]
+            tup = (p[0], p[1], p[2])
+            if tup not in ret:
+                ret.append(tup)
+
+    return ret
+
+
+def subtract_background(img, uniques):
+    rows, cols, _ = img.shape
+
+    for i in range(rows):
+        for j in range(cols):
+            p = img[i,j]
+            tup = (p[0], p[1], p[2])
+            if tup in uniques:
+                img[i,j] = [255, 255, 255]
+
+    cv2.imwrite("../subtracted.png", img)
+
+    return img
+
+
+def apply_closing(img):
+    kernel = np.ones((3,3), np.uint8)
+
+    img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+
+    cv2.imwrite("../closed.png", img)
+
+    return img
 
 """
 Loads an image dataset from 'path' folder. Maps the size of images to the average of those found in the dataset.
@@ -64,3 +106,8 @@ def load_and_preprocess(path, dims, mode=cv2.IMREAD_GRAYSCALE):
     images = resize_to_dims(images, dims)
     images = [normalize_image(img) for img in images]
     return np.expand_dims(np.array(images), axis=-1)
+
+im = cv2.imread("../dataset/278_ZT_recolor.png")
+u = define_background()
+wh = subtract_background(im, u)
+apply_closing(wh)
