@@ -60,7 +60,6 @@ Use an image of wowhead background to remove the background from training images
 def define_background(path_to_background="../img/wowhead_background.png"):
     background = cv2.imread(path_to_background)
     ret = []
-
     rows, cols, _ = background.shape
 
     for r in range(rows):
@@ -69,7 +68,6 @@ def define_background(path_to_background="../img/wowhead_background.png"):
             tup = (p[0], p[1], p[2])
             if tup not in ret:
                 ret.append(tup)
-
     return ret
 
 
@@ -84,17 +82,13 @@ def subtract_background(img, uniques):
                 img[i,j] = [255, 255, 255]
 
     cv2.imwrite("../subtracted.png", img)
-
     return img
 
 
 def apply_closing(img):
     kernel = np.ones((3,3), np.uint8)
-
     img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-
     cv2.imwrite("../closed.png", img)
-
     return img
 
 """
