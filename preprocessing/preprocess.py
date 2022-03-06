@@ -6,11 +6,12 @@ from os.path import isfile, join
 from tqdm import tqdm
 from hparams import hparams
 
+preprocessing_output_path = "../preprocessing_steps/"
 
 """
 Load images from 'path' directory, convert them to RGB and return a list of them 
 """
-def load_images(path, mode, only_zandalari=False):
+def load_images(path, mode):
     files = [f for f in listdir(path) if isfile(join(path + "/", f)) and f.endswith('png')]
 
     # Keep only zandalaris, dataset contains also other races. Defaults to True
@@ -55,23 +56,9 @@ def normalize_image(image):
     return cv2.normalize(image , None, alpha=-1, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
 """
-Use an image of wowhead background to remove the background from training images
+Uses a 'unique' set of pixels to replace in the image by white color.
 """
-def define_background(path_to_background="../img/wowhead_background.png"):
-    background = cv2.imread(path_to_background)
-    ret = []
-    rows, cols, _ = background.shape
-
-    for r in range(rows):
-        for c in range(cols):
-            p = background[r, c]
-            tup = (p[0], p[1], p[2])
-            if tup not in ret:
-                ret.append(tup)
-    return ret
-
-
-def subtract_background(img, uniques):
+def subtract_background(img, uniques=[(24,24,24), (0,0,0), (5,5,5), (12,12,12), (7,7,7)]):
     rows, cols, _ = img.shape
 
     for i in range(rows):
@@ -81,27 +68,57 @@ def subtract_background(img, uniques):
             if tup in uniques:
                 img[i,j] = [255, 255, 255]
 
-    cv2.imwrite("../subtracted.png", img)
+    cv2.imwrite(preprocessing_output_path + "subtracted.png", img)
     return img
 
 
 def apply_closing(img):
     kernel = np.ones((3,3), np.uint8)
     img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-    cv2.imwrite("../closed.png", img)
+    cv2.imwrite(preprocessing_output_path + "closed.png", img)
     return img
+
+def apply_opening(img):
+    kernel = np.ones((3, 3), np.uint8)
+    img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    cv2.imwrite(preprocessing_output_path + "opened.png", img)
+    return img
+
+
+def histogram_equalization(img):
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    clahe = cv2.createCLAHE()
+    lab[...,0] = clahe.apply(lab[...,0])
+    ret = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+
+    cv2.imwrite(preprocessing_output_path + "histeq.png", ret)
+    return ret
+
 
 """
 Loads an image dataset from 'path' folder. Maps the size of images to the average of those found in the dataset.
 Normalized image values to [0,1] range. Converts to RGB, opencv2 works with BGR by default.
 """
-def load_and_preprocess(path, dims, mode=cv2.IMREAD_GRAYSCALE):
+def load_and_prepare(path, dims, mode=cv2.IMREAD_GRAYSCALE):
     images = load_images(path, mode)
     images = resize_to_dims(images, dims)
     images = [normalize_image(img) for img in images]
+
     return np.expand_dims(np.array(images), axis=-1)
 
-im = cv2.imread("../dataset/278_ZT_recolor.png")
-u = define_background()
-wh = subtract_background(im, u)
-apply_closing(wh)
+
+def preprocess_training_images(path, mode):
+    images = load_images(path, mode)
+    images = [preprocess_image(img) for img in images]
+
+    for i in range(len(images)):
+        cv2.imwrite(images[i], path + "/prepared/" + str(i) + "_prepared.png")
+
+
+def preprocess_image(img):
+    img = subtract_background(img)
+    img = apply_closing(img)
+    img = apply_opening(img)
+    img = subtract_background(img, [(22,22,22), (16,16,16), (23, 23, 23), (21, 21, 21), (10,10,10), (14,14,14)])
+    return img
+
