@@ -44,4 +44,4 @@ class Config:
         self.DISC_NOISE_LAYER_VAR = 0.1
 
         # Keep only Zandalari Trolls training images
-        self.ONLY_ZANDALARI = True
+        self.ONLY_ZANDALARI = False

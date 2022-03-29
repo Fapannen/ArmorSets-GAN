@@ -11,9 +11,13 @@ from keras.utils.vis_utils import plot_model
 def main():
     config = hparams.Config()
 
+    # Preprocess the image dataset (Change background to white, apply image morphology)
+    preprocess.preprocess_training_images("dataset", config.MODE)
+
     # Generate 2x more images for training (Use only on the first run, without recolors)
-    # generator.generate_recolors("dataset")
-    # preprocess.preprocess_training_images("dataset", config.MODE)
+    generator.generate_recolors("dataset/prepared")
+
+    return
 
     # And only them load them for use
     images = preprocess.load_and_prepare("dataset/prepared", (config.IMG_WIDTH, config.IMG_HEIGHT), config.MODE)

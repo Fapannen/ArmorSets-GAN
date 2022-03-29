@@ -1,7 +1,9 @@
+import os.path
+
 import cv2
 import numpy as np
 import tensorflow as tf
-from os import listdir
+from os import listdir, mkdir
 from os.path import isfile, join
 from tqdm import tqdm
 from hparams import hparams
@@ -58,7 +60,7 @@ def normalize_image(image):
 """
 Uses a 'unique' set of pixels to replace in the image by white color.
 """
-def subtract_background(img, uniques=[(24,24,24), (0,0,0), (5,5,5), (12,12,12), (7,7,7)]):
+def subtract_background(img, uniques):
     rows, cols, _ = img.shape
 
     for i in range(rows):
@@ -68,20 +70,17 @@ def subtract_background(img, uniques=[(24,24,24), (0,0,0), (5,5,5), (12,12,12), 
             if tup in uniques:
                 img[i,j] = [255, 255, 255]
 
-    cv2.imwrite(preprocessing_output_path + "subtracted.png", img)
     return img
 
 
 def apply_closing(img):
     kernel = np.ones((3,3), np.uint8)
     img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-    cv2.imwrite(preprocessing_output_path + "closed.png", img)
     return img
 
 def apply_opening(img):
     kernel = np.ones((3, 3), np.uint8)
     img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
-    cv2.imwrite(preprocessing_output_path + "opened.png", img)
     return img
 
 
@@ -91,9 +90,52 @@ def histogram_equalization(img):
     lab[...,0] = clahe.apply(lab[...,0])
     ret = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
-    cv2.imwrite(preprocessing_output_path + "histeq.png", ret)
     return ret
 
+
+def extract_largest_connected_component(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    thresh = 255 - thresh
+
+    num_comps, labels, stats, centroids = cv2.connectedComponentsWithStats(thresh, 8, cv2.CV_32S)
+
+    max_label, max_size = max([(i, stats[i, cv2.CC_STAT_AREA]) for i in range(1, num_comps)], key=lambda x: x[1])
+
+    for i in range(gray.shape[0]):
+        for j in range(gray.shape[1]):
+            if labels[i][j] == max_label:
+                gray[i][j] = True
+            else:
+                gray[i][j] = False
+
+    return cv2.bitwise_and(img, img, mask=gray)
+
+
+def merge_original_and_largest_region(orig, largest_reg, use_relative_size_threshold=False):
+    # Extracting largest components succeeds at removing the wowhead logo in the background
+    # But also removes some connected areas within the character. Mitigate this issue by the
+    # Following code. Take the original image with its background subtracted, along with the
+    # extracted image. If these two images disagree in the pixel value, keep the original one,
+    # if it is not background color (x, x, x)
+    for i in range(largest_reg.shape[0]):
+        for j in range(largest_reg.shape[1]):
+            img_tup = (largest_reg[i][j][0], largest_reg[i][j][1], largest_reg[i][j][2])
+            orig_tup = (orig[i][j][0], orig[i][j][1], orig[i][j][2])
+            if img_tup == (255, 255, 255) and (orig_tup != (255, 255, 255) and len(set(orig_tup)) != 1):
+                largest_reg[i][j] = orig[i][j]
+            if use_relative_size_threshold:
+                img_height = largest_reg.shape[0]
+                img_width  = largest_reg.shape[1]
+
+                height_range = range(int((img_height / 100) * 20), int((img_height / 100) * 80))
+                width_range = range(int((img_width / 100) * 33), int((img_width / 100) * 67))
+
+                if img_tup == (255, 255, 255) and orig_tup != (255, 255, 255) and (i in height_range and j in width_range):
+                    largest_reg[i][j] = orig[i][j]
+
+    return largest_reg
 
 """
 Loads an image dataset from 'path' folder. Maps the size of images to the average of those found in the dataset.
@@ -111,14 +153,24 @@ def preprocess_training_images(path, mode):
     images = load_images(path, mode)
     images = [preprocess_image(img) for img in images]
 
+    if not os.path.exists(path + "/prepared"):
+        mkdir(path + "/prepared")
+
     for i in range(len(images)):
-        cv2.imwrite(images[i], path + "/prepared/" + str(i) + "_prepared.png")
+        cv2.imwrite(path + "/prepared/" + str(i) + "_prepared.png", images[i])
 
 
 def preprocess_image(img):
-    img = subtract_background(img)
-    img = apply_closing(img)
-    img = apply_opening(img)
-    img = subtract_background(img, [(22,22,22), (16,16,16), (23, 23, 23), (21, 21, 21), (10,10,10), (14,14,14)])
+    orig = subtract_background(img, [(24, 24, 24)])
+
+    img = extract_largest_connected_component(orig)
+    img = subtract_background(img, [(i,i,i) for i in range(24)])
+
+    temp = apply_closing(orig)
+    temp = apply_opening(temp)
+
+    img = merge_original_and_largest_region(orig, img, use_relative_size_threshold=True)
+    img = merge_original_and_largest_region(temp, img)
+
     return img
 
