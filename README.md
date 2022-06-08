@@ -4,7 +4,9 @@ In this repository, I tried to create a Generative Adversarial Network (GAN) for
 
 <img src="https://github.com/Fapannen/ArmorSets-GAN/blob/main/img/publ.png" width="800" height="600" />
 
-Model trained for 3000 epochs is available for download [here](https://drive.google.com/file/d/1XX99gXyxNOywY1AnPscO_XyIsB1kAyJo/view?usp=sharing)
+Model trained for 3000 epochs is available for download [here](https://drive.google.com/file/d/1XX99gXyxNOywY1AnPscO_XyIsB1kAyJo/view?usp=sharing)  
+
+Model trained for 1350 epochs with image preprocessing, as a part of PA026 course is available for download [here](https://drive.google.com/file/d/1LqfvPT7Otp3GyM9ffEa9CIIt3fd_kt_i/view?usp=sharing)
 
 ## Introduction
 In WoW, "transmog" is a "fashion style" that you apply to your character. Wearing different types of armor can (but don't have to) change your looks. There are specifically created "transmog sets" by the developers, which are usually intended to be well-matched together. Players, of course, experiment and often create nice and unique transmogs by combining several other transmog sets together. Note that a given item may or may not be a part of a transmog set. Since the process of creating a new, nice-looking outfit needs a bit of creativity and can be considered an art to some extent, why not use GANs to generate this art? I will not be creating combinations of existing transmogs per se, rather the network shall learn new pieces of armor that could potentially be added to the game.
